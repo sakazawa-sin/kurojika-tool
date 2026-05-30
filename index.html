@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黒字生存診断ツール｜無料版｜アパレル店舗 黒字化チェック</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet"></noscript>
+<style>
+:root {
+  --navy:#1a2f4a; --navy2:#243b55;
+  --teal:#1a8a7a; --teal-lt:#d4f0eb; --teal-dk:#0d5e53;
+  --blue:#1e5fa3; --blue-lt:#dbeafe;
+  --amber:#d97706; --amber-lt:#fef3c7;
+  --red:#c0392b;   --red-lt:#fee2e2;
+  --green:#166534; --green-lt:#dcfce7;
+  --gray:#64748b;  --gray-lt:#f1f5f9; --gray-bd:#e2e8f0;
+  --cf-pos:#059669; --cf-neg:#dc2626;
+  --purple:#6d28d9; --purple-lt:#ede9fe;
+  --rose:#be185d; --rose-lt:#fce7f3;
+  --white:#fff;
+  --shadow:0 2px 16px rgba(0,0,0,.09);
+  --radius:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:#f0f4f8;color:#1e293b;min-height:100vh}
+header{background:var(--navy);padding:18px 32px;display:flex;align-items:center;gap:16px}
+.brand{font-family:'Outfit',sans-serif;font-weight:900;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.4);text-transform:uppercase}
+header h1{font-size:18px;font-weight:700;color:#fff;letter-spacing:.03em}
+.tagline{font-size:12px;color:rgba(255,255,255,.6);margin-left:auto}
+.tabs{background:var(--navy2);padding:0 32px;display:flex;gap:4px;border-bottom:2px solid rgba(255,255,255,.07)}
+.tab{padding:13px 22px;font-size:13px;font-weight:700;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.02em;white-space:nowrap}
+.tab:hover{color:rgba(255,255,255,.75)}
+.tab.active-existing{color:#60a5fa;border-bottom-color:#60a5fa}
+.tab.active-preopen{color:#34d399;border-bottom-color:#34d399}
+.tab.active-cf{color:#fb923c;border-bottom-color:#fb923c}
+.tab.active-excf{color:#a78bfa;border-bottom-color:#a78bfa}
+.tab.active-startup{color:#f472b6;border-bottom-color:#f472b6}
+.tab.active-gap{color:#38bdf8;border-bottom-color:#38bdf8}
+.page{display:none}.page.show{display:block}
+.two-col{max-width:1140px;margin:0 auto;padding:28px 24px 64px;display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
+.full-col{max-width:1140px;margin:0 auto;padding:28px 24px 64px}
+@media(max-width:820px){.two-col{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-head{padding:15px 22px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.ch-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.card-body{padding:18px 22px}
+.existing .card-head{background:var(--blue-lt);color:var(--blue)}
+.existing .ch-icon{background:var(--blue);color:#fff}
+.preopen .card-head{background:var(--teal-lt);color:var(--teal-dk)}
+.preopen .ch-icon{background:var(--teal);color:#fff}
+.cf-card .card-head{background:#fff7ed;color:#9a3412}
+.cf-card .ch-icon{background:#ea580c;color:#fff}
+.excf-card .card-head{background:var(--purple-lt);color:var(--purple)}
+.excf-card .ch-icon{background:var(--purple);color:#fff}
+.startup-card .card-head{background:var(--rose-lt);color:var(--rose)}
+.startup-card .ch-icon{background:var(--rose);color:#fff}
+.gap-card .card-head{background:#e0f2fe;color:#0369a1}
+.gap-card .ch-icon{background:#0284c7;color:#fff}
+.gap-explain{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px}
+.gap-explain-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.gap-explain-body{font-size:12.5px;color:#374151;line-height:1.9}
+.gap-row{display:flex;align-items:center;gap:0;margin:18px 0}
+.gap-box{flex:1;border-radius:10px;padding:14px 16px;text-align:center}
+.gap-box-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.gap-box-val{font-family:'Outfit',sans-serif;font-size:26px;font-weight:900;line-height:1}
+.gap-box-sub{font-size:11px;margin-top:5px;line-height:1.5}
+.gap-arrow{font-size:22px;color:var(--gray);padding:0 8px;flex-shrink:0}
+.gap-profit{background:#dcfce7;}.gap-profit .gap-box-label{color:#166534}.gap-profit .gap-box-val{color:#166534}
+.gap-cash{background:#fee2e2;}.gap-cash .gap-box-label{color:#991b1b}.gap-cash .gap-box-val{color:#991b1b}
+.gap-diff{background:#fef3c7;}.gap-diff .gap-box-label{color:#92400e}.gap-diff .gap-box-val{color:#92400e}
+.factor-list{margin-top:16px}
+.factor-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--gray-bd)}
+.factor-item:last-child{border-bottom:none}
+.factor-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.factor-text{font-size:12.5px;line-height:1.6;color:#374151}
+.factor-text strong{color:var(--navy)}
+.factor-amount{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;white-space:nowrap;text-align:right}
+.fa-drain{background:#fee2e2;color:#991b1b}
+.bar-wrap{background:var(--gray-lt);border-radius:6px;height:10px;margin-top:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .4s ease}
+.gap-total-row{background:var(--navy);border-radius:var(--radius);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.gap-total-label{color:rgba(255,255,255,.6);font-size:12px;font-weight:700;letter-spacing:.08em}
+.gap-total-val{font-family:'Outfit',sans-serif;font-size:28px;font-weight:900;color:#fff}
+.gap-advice{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 22px;margin-top:14px}
+.advice-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:12px}
+.advice-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--gray-bd);font-size:12.5px;line-height:1.7;color:#374151}
+.advice-item:last-child{border-bottom:none}
+.stage-selector{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.stage-btn{padding:10px 18px;border-radius:10px;border:2px solid var(--gray-bd);background:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--gray)}
+.stage-btn.active{border-color:var(--rose);background:var(--rose-lt);color:var(--rose)}
+.stage-panel{display:none}.stage-panel.show{display:block}
+.stage-result{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 24px;margin-top:16px}
+.stage-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:12px}
+.sb-ok{background:var(--green-lt);color:var(--green)}
+.sb-warn{background:var(--amber-lt);color:var(--amber)}
+.sb-ng{background:var(--red-lt);color:var(--red)}
+.condition-list{margin-top:12px}
+.cond-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-bd);font-size:13px}
+.cond-item:last-child{border-bottom:none}
+.result-number{font-family:'Outfit',sans-serif;font-size:32px;font-weight:900;color:var(--navy)}
+.result-number span{font-size:14px;font-weight:400;color:var(--gray);margin-left:4px}
+.ir{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--gray-bd)}
+.ir:last-child{border-bottom:none}
+.il{font-size:13px;color:#374151;font-weight:500;line-height:1.4}
+.il small{display:block;font-size:11px;color:var(--gray);font-weight:400;margin-top:2px}
+.iw{display:flex;align-items:center;gap:4px;background:var(--gray-lt);border:1.5px solid var(--gray-bd);border-radius:8px;padding:5px 10px;transition:border-color .2s;min-width:130px}
+.iw:focus-within{border-color:var(--blue);background:#fff}
+.tab-preopen .iw:focus-within{border-color:var(--teal)}
+.tab-cf .iw:focus-within{border-color:#ea580c}
+.iw input{width:78px;border:none;background:transparent;font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--navy);text-align:right;outline:none}
+.iw input::-webkit-inner-spin-button{display:none}
+.unit{font-size:11.5px;color:var(--gray);font-weight:500;white-space:nowrap}
+.result-panel{position:sticky;top:24px;display:flex;flex-direction:column;gap:14px}
+.score-card{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.sc-head{padding:20px 22px 14px;color:#fff}
+.sc-head.ex-grad{background:linear-gradient(135deg,#1a2f4a 0%,#1e5fa3 100%)}
+.sc-head.pre-grad{background:linear-gradient(135deg,#1a2f4a 0%,#1a8a7a 100%)}
+.sc-eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.6;margin-bottom:6px}
+.sc-verdict{font-family:'Outfit',sans-serif;font-size:28px;font-weight:900}
+.sc-sub{font-size:11.5px;opacity:.7;margin-top:4px}
+.tier-badge{display:inline-block;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.08em;margin-top:6px}
+.kpi-list{background:#fff}
+.kpi-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--gray-bd);transition:background .15s}
+.kpi-row:last-child{border-bottom:none}
+.kpi-row:hover{background:#f8fafc}
+.kpi-name{font-size:12.5px;font-weight:500;color:#374151}
+.kpi-val{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--navy);text-align:right;min-width:76px}
+.badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.b-ok{background:var(--green-lt);color:var(--green)}
+.b-warn{background:var(--amber-lt);color:var(--amber)}
+.b-ng{background:var(--red-lt);color:var(--red)}
+.b-na{background:var(--gray-lt);color:var(--gray)}
+.be-box{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.be-inner{padding:18px 22px}
+.be-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:6px}
+.be-val{font-family:'Outfit',sans-serif;font-size:34px;font-weight:900;color:var(--navy);line-height:1}
+.be-unit{font-size:14px;font-weight:400;color:var(--gray);margin-left:3px}
+.be-sub{font-size:11.5px;color:var(--gray);margin-top:6px;line-height:1.6}
+.be-div{height:1px;background:var(--gray-bd);margin:0 22px}
+.pri-box{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 22px}
+.pri-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:12px}
+.pri-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--gray-bd);animation:fi .25s ease}
+.pri-item:last-child{border-bottom:none}
+.pn{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px}
+.pn1{background:var(--red);color:#fff}.pn2{background:var(--amber);color:#fff}.pn3{background:var(--blue);color:#fff}
+.pt{font-size:12.5px;line-height:1.65;color:#374151}
+.pt strong{color:var(--navy)}
+.no-issues{font-size:13px;color:var(--green);font-weight:500;padding:6px 0;display:flex;align-items:center;gap:8px}
+.note{font-size:11px;color:var(--gray);background:var(--gray-lt);border-radius:8px;padding:9px 13px;margin-top:8px;line-height:1.7}
+.cf-controls{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 24px;margin-bottom:20px}
+.cf-ctrl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0}
+.cf-section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin:18px 0 10px;grid-column:1/-1;border-top:1px solid var(--gray-bd);padding-top:14px}
+.cf-section-title:first-child{border-top:none;padding-top:0;margin-top:0}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kstrip{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px}
+.kstrip-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:6px}
+.kstrip-val{font-family:'Outfit',sans-serif;font-size:26px;font-weight:900;color:var(--navy);line-height:1}
+.kstrip-sub{font-size:11px;color:var(--gray);margin-top:4px}
+.kstrip.highlight{background:var(--navy)}
+.kstrip.highlight .kstrip-label{color:rgba(255,255,255,.55)}
+.kstrip.highlight .kstrip-val{color:#fff}
+.kstrip.highlight .kstrip-sub{color:rgba(255,255,255,.5)}
+.kstrip.ok-strip .kstrip-val{color:var(--green)}
+.kstrip.ng-strip .kstrip-val{color:var(--red)}
+.cf-table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.cf-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.cf-table thead th{background:var(--navy);color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;letter-spacing:.07em;padding:11px 14px;text-align:right;white-space:nowrap}
+.cf-table thead th:first-child{text-align:left;min-width:60px}
+.cf-table tbody tr{border-bottom:1px solid var(--gray-bd)}
+.cf-table tbody tr:last-child{border-bottom:none}
+.cf-table tbody tr:hover{background:#f8fafc}
+.cf-table tbody td{padding:9px 14px;text-align:right;font-family:'DM Mono',monospace;color:#334155}
+.cf-table tbody td:first-child{text-align:center;font-family:'Noto Sans JP',sans-serif;font-weight:700;color:var(--navy);font-size:13px}
+.cf-table tfoot td{padding:11px 14px;text-align:right;font-weight:700;font-family:'DM Mono',monospace;background:#f8fafc;font-size:13px}
+.cf-table tfoot td:first-child{text-align:center;font-family:'Noto Sans JP',sans-serif;font-size:13px}
+.pos{color:var(--cf-pos)}.neg{color:var(--cf-neg)}
+.recovered{background:#dcfce7 !important}
+.recovered td{color:#166534 !important}
+.cf-table tbody tr.breakeven-row{background:var(--amber-lt)}
+.cf-table tbody tr.breakeven-row td{color:#92400e}
+.toggle-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-bd)}
+.toggle-label{font-size:13px;font-weight:500;color:#374151;flex:1}
+.toggle-label small{display:block;font-size:11px;color:var(--gray)}
+.toggle{position:relative;display:inline-block;width:44px;height:24px}
+.toggle input{opacity:0;width:0;height:0}
+.slider-switch{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#cbd5e1;transition:.3s;border-radius:24px}
+.slider-switch:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;transition:.3s;border-radius:50%}
+input:checked+.slider-switch{background:#ea580c}
+input:checked+.slider-switch:before{transform:translateX(20px)}
+input:checked+.excf-slider{background:#6d28d9}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">Apparel Survival</span>
+  <h1>黒字生存 診断ツール <span style="font-size:12px;opacity:.5;font-weight:400;background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;margin-left:6px">無料版</span></h1>
+  <span class="tagline">今の売上のまま、黒字化する ／ 詳細診断はコンサルで</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active-existing" onclick="setTab('existing')">既存店舗　診断</div>
+  <div class="tab" onclick="setTab('preopen')">開業前　診断</div>
+  <div class="tab" onclick="setTab('gap')">利益と現金のギャップ</div>
+</div>
+
+<!-- ━━━━━━ PAGE: 既存店舗 ━━━━━━ -->
+<div class="page show" id="page-existing">
+<div class="two-col">
+  <div>
+    <div class="card existing">
+      <div class="card-head"><div class="ch-icon">📊</div>売上・粗利</div>
+      <div class="card-body">
+        <div class="ir"><div class="il">月商（直近3ヶ月平均）</div><div class="iw"><input type="number" id="e_rev" value="60" min="0" oninput="calcEx()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">原価率<small>仕入れ値 ÷ 販売価格</small></div><div class="iw"><input type="number" id="e_cogs" value="50" min="0" max="100" oninput="calcEx()"><span class="unit">%</span></div></div>
+      </div>
+    </div>
+    <div class="card existing">
+      <div class="card-head"><div class="ch-icon">🏠</div>固定費</div>
+      <div class="card-body">
+        <div class="ir"><div class="il">月額家賃（共益費込み）</div><div class="iw"><input type="number" id="e_rent" value="10" min="0" oninput="calcEx()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">人件費合計<small>オーナー給与を除く</small></div><div class="iw"><input type="number" id="e_labor" value="8" min="0" oninput="calcEx()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">その他固定費<small>光熱費・システム費等</small></div><div class="iw"><input type="number" id="e_other" value="3" min="0" oninput="calcEx()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">オーナー給与</div><div class="iw"><input type="number" id="e_salary" value="10" min="0" oninput="calcEx()"><span class="unit">万円</span></div></div>
+      </div>
+    </div>
+    <div class="card existing">
+      <div class="card-head"><div class="ch-icon">📦</div>在庫</div>
+      <div class="card-body">
+        <div class="ir"><div class="il">現在の在庫総額（原価）</div><div class="iw"><input type="number" id="e_inv" value="50" min="0" oninput="calcEx()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">滞留在庫の割合<small>3ヶ月以上売れていない商品の原価合計 ÷ 在庫総額。<br>正確な数字がなければ感覚値（25〜30%）でOK</small></div><div class="iw"><input type="number" id="e_stale" value="25" min="0" max="100" oninput="calcEx()"><span class="unit">%</span></div></div>
+      </div>
+    </div>
+    <p class="note">※ 月商に応じて自動的に適切な診断基準を適用します（50〜80万円層 / 100万円超層で基準が異なります）</p>
+  </div>
+  <div class="result-panel" id="res-ex"></div>
+</div>
+</div>
+
+<!-- ━━━━━━ PAGE: 開業前診断 ━━━━━━ -->
+<div class="page" id="page-preopen">
+<div class="two-col">
+  <div>
+    <div class="card preopen">
+      <div class="card-head"><div class="ch-icon">🏢</div>物件・初期費用</div>
+      <div class="card-body">
+        <div class="ir"><div class="il">月額家賃（共益費込み）</div><div class="iw"><input type="number" id="p_rent" value="10" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">内装工事費（概算）</div><div class="iw"><input type="number" id="p_int" value="100" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">内装の想定使用年数<small>月割計算に使用</small></div><div class="iw"><input type="number" id="p_intyrs" value="5" min="1" max="20" oninput="calcPre()"><span class="unit">年</span></div></div>
+        <div class="ir"><div class="il">保証金・礼金・仲介手数料</div><div class="iw"><input type="number" id="p_dep" value="60" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+      </div>
+    </div>
+    <div class="card preopen">
+      <div class="card-head"><div class="ch-icon">💰</div>資金計画</div>
+      <div class="card-body">
+        <div class="ir"><div class="il">自己資金総額</div><div class="iw"><input type="number" id="p_cap" value="300" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">借入金額（0の場合はそのまま）</div><div class="iw"><input type="number" id="p_loan" value="0" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">初期仕入れ予算</div><div class="iw"><input type="number" id="p_stock" value="60" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+      </div>
+    </div>
+    <div class="card preopen">
+      <div class="card-head"><div class="ch-icon">📊</div>粗利・月次費用（設計値）</div>
+      <div class="card-body">
+        <div class="ir"><div class="il">想定原価率</div><div class="iw"><input type="number" id="p_cogs" value="48" min="0" max="100" oninput="calcPre()"><span class="unit">%</span></div></div>
+        <div class="ir"><div class="il">人件費（オーナー以外）</div><div class="iw"><input type="number" id="p_labor" value="0" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">その他月次固定費</div><div class="iw"><input type="number" id="p_other" value="3" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">オーナー給与（目標）</div><div class="iw"><input type="number" id="p_salary" value="10" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <div class="ir"><div class="il">月商見込み<small>根拠のある見込み値</small></div><div class="iw"><input type="number" id="p_rev" value="60" min="0" oninput="calcPre()"><span class="unit">万円</span></div></div>
+        <p class="note">※ 見込み月商に応じて適切な診断基準を自動適用します</p>
+      </div>
+    </div>
+  </div>
+  <div class="result-panel" id="res-pre"></div>
+</div>
+</div>
+
+<!-- ━━━━━━ PAGE: 利益と現金のギャップ ━━━━━━ -->
+<div class="page" id="page-gap">
+<div class="full-col">
+
+  <!-- 解説パネル -->
+  <div class="gap-explain">
+    <div class="gap-explain-title">📘 なぜ「利益が出ているのに現金がないのか」</div>
+    <div class="gap-explain-body">
+      損益計算書の「利益」と、実際に手元に残る「現金」は<strong>別物</strong>です。<br>
+      アパレル経営では特に、この2つのギャップが大きくなりやすい構造があります。<br>
+      下に数値を入力すると、あなたのお店で毎月いくらのギャップが発生しているかを可視化します。
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+    <!-- 入力 -->
+    <div>
+      <div class="card gap-card">
+        <div class="card-head"><div class="ch-icon">🔢</div>基本情報</div>
+        <div class="card-body">
+          <div class="cf-section-title" style="border-top:none;padding-top:0;margin-top:0">【売上・粗利】</div>
+          <div class="ir"><div class="il">月商</div><div class="iw"><input type="number" id="g_rev" value="80" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">原価率</div><div class="iw"><input type="number" id="g_cogs" value="50" min="0" max="100" oninput="calcGap()"><span class="unit">%</span></div></div>
+          <div class="cf-section-title">【固定費】</div>
+          <div class="ir"><div class="il">家賃</div><div class="iw"><input type="number" id="g_rent" value="12" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">人件費（オーナー以外）</div><div class="iw"><input type="number" id="g_labor" value="8" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">その他固定費</div><div class="iw"><input type="number" id="g_other" value="3" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">オーナー給与</div><div class="iw"><input type="number" id="g_salary" value="10" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="cf-section-title">【在庫】</div>
+          <div class="ir"><div class="il">現在の在庫総額（原価）</div><div class="iw"><input type="number" id="g_inv" value="80" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">月次仕入れ支払額<small>実際に毎月支払う額</small></div><div class="iw"><input type="number" id="g_purchase" value="50" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">在庫回転率<small>月商÷在庫総額（原価）の目安</small></div><div class="iw"><input type="number" id="g_turn" value="1.0" min="0.1" step="0.1" oninput="calcGap()"><span class="unit">回/月</span></div></div>
+          <div class="cf-section-title">【その他現金流出】</div>
+          <div class="ir"><div class="il">借入元金の月次返済額</div><div class="iw"><input type="number" id="g_repay" value="0" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">減価償却費（月額）<small>内装・什器等の月割</small></div><div class="iw"><input type="number" id="g_dep" value="2" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+          <div class="ir"><div class="il">消費税積立不足<small>売上×10%を積立できていない月額</small></div><div class="iw"><input type="number" id="g_tax" value="0" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 結果 -->
+    <div id="gap-result"></div>
+
+  </div>
+</div>
+</div>
+
+<script>
+// ─── 2段階基準値 ────────────────────────────
+// 低月商層（50〜80万）と中月商層（100万超）で基準を変える
+const TH_LOW = {
+  gm:  {ok:50, warn:45, label:'粗利率',         invert:false},
+  fc:  {ok:40, warn:45, label:'固定費率',        invert:true},
+  sal: {ok:15, warn:10, label:'オーナー給与率',  invert:false},
+  inv: {ok:1.2,warn:0.8,label:'在庫回転率（月）',invert:false},
+  stl: {ok:15, warn:25, label:'滞留在庫率',      invert:true},
+  rnt: {ok:20, warn:25, label:'家賃比率',        invert:true},
+};
+const TH_MID = {
+  gm:  {ok:45, warn:40, label:'粗利率',         invert:false},
+  fc:  {ok:35, warn:40, label:'固定費率',        invert:true},
+  sal: {ok:20, warn:15, label:'オーナー給与率',  invert:false},
+  inv: {ok:1.0,warn:0.5,label:'在庫回転率（月）',invert:false},
+  stl: {ok:10, warn:20, label:'滞留在庫率',      invert:true},
+  rnt: {ok:15, warn:20, label:'家賃比率',        invert:true},
+};
+
+function getTH(rev){
+  return rev < 90 ? TH_LOW : TH_MID;
+}
+function getTierName(rev){
+  if(rev < 90) return '低月商層（〜80万）';
+  return '中月商層（100万超）';
+}
+
+const v = id => parseFloat(document.getElementById(id)?.value)||0;
+const fmt = (n,d=1) => isFinite(n)&&!isNaN(n) ? n.toFixed(d).replace(/\.0$/,'') : '—';
+
+function setTab(t){
+  ['existing','preopen','gap'].forEach(m=>{
+    document.getElementById('page-'+m).classList.toggle('show', m===t);
+    const idx=['existing','preopen','gap'].indexOf(m);
+    document.querySelectorAll('.tab')[idx]
+      .className = 'tab' + (m===t ? ' active-'+m : '');
+  });
+  if(t==='existing') calcEx();
+  if(t==='preopen')  calcPre();
+  if(t==='gap')      calcGap();
+}
+
+// ─── 利益と現金のギャップ ─────────────────────────
+function calcGap(){
+  const rev      = v('g_rev');
+  const cogs     = v('g_cogs');
+  const rent     = v('g_rent');
+  const labor    = v('g_labor');
+  const other    = v('g_other');
+  const salary   = v('g_salary');
+  const inv      = v('g_inv');
+  const purchase = v('g_purchase');
+  const turn     = v('g_turn') || 1;
+  const repay    = v('g_repay');
+  const depMonth = v('g_dep');
+  const taxShort = v('g_tax');
+
+  const gm = 100 - cogs;
+  const grossProfit = rev * gm / 100;
+  const fixedTotal  = rent + labor + other + salary;
+  // 損益上の利益（売上原価＝月商×原価率）
+  const bookProfit  = grossProfit - fixedTotal;
+
+  // ── ギャップ要因の計算 ──────────────────────────
+
+  // ①在庫増減による現金流出
+  // 実際の仕入れ支払い vs 損益上の売上原価
+  const cogsOnPL    = rev * cogs / 100;   // 損益上の売上原価（売れた分）
+  const invGap      = purchase - cogsOnPL; // プラスなら在庫積み増し=現金流出超過
+
+  // ②在庫回転率から見た滞留分の現金固定
+  // 適正在庫 = 月次仕入れ ÷ 回転率。現在庫との差が「過剰固定額」
+  const idealInv    = turn > 0 ? cogsOnPL / turn : 0;
+  const invExcess   = Math.max(0, inv - idealInv); // 過剰在庫額（現金が固定されている額）
+
+  // ③借入元金返済（損益に出ない現金流出）
+  const repayGap    = repay;
+
+  // ④減価償却費（費用計上されているが現金流出は過去に済み）
+  // 帳簿上は費用→利益を下げるが現金は出ていかない（逆方向のギャップ、利益より現金が多くなる方向）
+  const depGap      = -depMonth; // マイナス＝現金は利益より多い方向
+
+  // ⑤消費税積立不足
+  const taxGap      = taxShort;
+
+  // 実際に手元に残る現金（概算）
+  const actualCash  = bookProfit - invGap - repayGap - taxGap + depMonth;
+  // 総ギャップ（利益から現金が減る方向のみ集計）
+  const totalDrain  = Math.max(0, invGap) + repayGap + taxGap;
+
+  // ── 結果表示 ──────────────────────────────────
+  const el = document.getElementById('gap-result');
+
+  // ギャップが大きい順にファクター整理
+  const factors = [
+    {
+      icon:'📦', label:'在庫の積み増し・滞留',
+      amount: Math.max(0, invGap) + invExcess * 0.1, // 月次影響額（簡略）
+      drain: Math.max(0, invGap),
+      desc: invGap > 0
+        ? `仕入れ支払い <strong>${fmt(purchase)}万円</strong> に対して損益上の売上原価は <strong>${fmt(cogsOnPL)}万円</strong>。差額 <strong>${fmt(invGap)}万円</strong> が現金として流出しています。`
+        : `今月の仕入れ支払いは売上原価の範囲内です。ただし在庫総額 <strong>${fmt(inv)}万円</strong> のうち適正在庫額 <strong>${fmt(idealInv)}万円</strong> を超える <strong>${fmt(invExcess)}万円</strong> が現金として固定されています。`,
+      color:'#fee2e2', iconBg:'#dc2626'
+    },
+    {
+      icon:'🏦', label:'借入元金の返済',
+      amount: repay, drain: repay,
+      desc: repay > 0
+        ? `月次返済 <strong>${fmt(repay)}万円</strong> は損益計算書に費用として現れません。しかし現金は確実に出ていきます。年間では <strong>${fmt(repay*12)}万円</strong> が損益に現れずに消えています。`
+        : '現在の借入返済はありません。',
+      color:'#fef3c7', iconBg:'#d97706'
+    },
+    {
+      icon:'🧾', label:'消費税の積立不足',
+      amount: taxShort, drain: taxShort,
+      desc: taxShort > 0
+        ? `毎月 <strong>${fmt(taxShort)}万円</strong> の消費税が積み立てられていません。年間 <strong>${fmt(taxShort*12)}万円</strong> が申告時に一括で出ていきます。売上税込みで入金されるため「手元にある」と感じますが、その分は消費税です。`
+        : `消費税の積立不足は入力されていません。売上の約9%（税抜換算）を毎月積み立てているか確認してください。`,
+      color:'#ede9fe', iconBg:'#7c3aed'
+    },
+    {
+      icon:'🔧', label:'減価償却費（逆方向）',
+      amount: depMonth, drain: 0,
+      desc: `月次償却費 <strong>${fmt(depMonth)}万円</strong> は帳簿上の費用ですが現金の流出はありません（開業時に支払済み）。この分だけ「利益より現金の方が多くなる」方向に働きます。`,
+      color:'#dcfce7', iconBg:'#16a34a'
+    }
+  ];
+
+  const maxDrain = Math.max(...factors.map(f => f.drain), 1);
+
+  el.innerHTML = `
+    <!-- 利益 vs 現金 サマリー -->
+    <div class="gap-explain" style="margin-bottom:16px">
+      <div class="gap-explain-title">📊 今月の利益と手元現金の比較</div>
+      <div class="gap-row">
+        <div class="gap-box gap-profit">
+          <div class="gap-box-label">損益上の利益</div>
+          <div class="gap-box-val">${fmt(bookProfit)}<span style="font-size:13px;font-weight:400;margin-left:3px">万円</span></div>
+          <div class="gap-box-sub">売上 − 売上原価 − 固定費<br>帳簿上はこの利益が出ている</div>
+        </div>
+        <div class="gap-arrow">→</div>
+        <div class="gap-box gap-diff">
+          <div class="gap-box-label">ギャップ（現金流出）</div>
+          <div class="gap-box-val">▲${fmt(totalDrain)}<span style="font-size:13px;font-weight:400;margin-left:3px">万円</span></div>
+          <div class="gap-box-sub">在庫・返済・消費税等<br>損益に現れない現金流出</div>
+        </div>
+        <div class="gap-arrow">→</div>
+        <div class="gap-box gap-cash">
+          <div class="gap-box-label">実際の手元残高増減</div>
+          <div class="gap-box-val ${actualCash >= 0 ? '' : ''}">${actualCash >= 0 ? '+' : ''}${fmt(actualCash)}<span style="font-size:13px;font-weight:400;margin-left:3px">万円</span></div>
+          <div class="gap-box-sub">毎月手元に残る（出ていく）<br>実際の現金</div>
+        </div>
+      </div>
+      <div style="background:${actualCash >= 0 ? '#dcfce7' : '#fee2e2'};border-radius:8px;padding:10px 14px;font-size:12.5px;font-weight:700;color:${actualCash >= 0 ? '#166534' : '#991b1b'}">
+        ${actualCash >= 0
+          ? `✅ 帳簿利益 ${fmt(bookProfit)}万円 に対して、実際の現金増加は ${fmt(actualCash)}万円 です（差額 ${fmt(bookProfit - actualCash)}万円 が各要因で吸収されています）`
+          : `⚠️ 帳簿上は ${fmt(bookProfit)}万円 の利益でも、実際には毎月 ${fmt(Math.abs(actualCash))}万円 ずつ手元から現金が減っています`}
+      </div>
+    </div>
+
+    <!-- 要因別内訳 -->
+    <div class="gap-advice">
+      <div class="advice-title">ギャップの要因別内訳</div>
+      <div class="factor-list">
+        ${factors.map(f => `
+          <div class="factor-item">
+            <div class="factor-icon" style="background:${f.color}">
+              <span>${f.icon}</span>
+            </div>
+            <div class="factor-text">
+              <strong>${f.label}</strong><br>
+              ${f.desc}
+              ${f.drain > 0 ? `
+              <div class="bar-wrap" style="margin-top:8px">
+                <div class="bar-fill" style="width:${Math.min(100, f.drain/maxDrain*100)}%;background:${f.iconBg}"></div>
+              </div>` : ''}
+            </div>
+            <div class="factor-amount" style="color:${f.drain > 0 ? '#dc2626' : '#16a34a'}">
+              ${f.drain > 0 ? '▲' : '＋'}${fmt(f.drain > 0 ? f.drain : depMonth)}万円
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="gap-total-row">
+        <div>
+          <div class="gap-total-label">総ギャップ（月次）</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">年間換算：${fmt(totalDrain * 12)}万円</div>
+        </div>
+        <div class="gap-total-val">▲${fmt(totalDrain)}万円</div>
+      </div>
+    </div>
+
+    <!-- アドバイス -->
+    <div class="gap-advice" style="margin-top:14px">
+      <div class="advice-title">改善のポイント</div>
+      ${Math.max(0, invGap) > 0 ? `<div class="advice-item">📦 <span><strong>仕入れを売上原価の範囲内に収める：</strong>今月は ${fmt(invGap)}万円 分、売れる以上に仕入れています。「今月売れた分だけ来月仕入れる」原則を守ることが現金を守る最短ルートです。</span></div>` : ''}
+      ${invExcess > 30 ? `<div class="advice-item">🏷️ <span><strong>滞留在庫を現金に戻す：</strong>適正在庫 ${fmt(idealInv)}万円 に対して ${fmt(invExcess)}万円 が過剰に固定されています。値引きセールで現金化し、回転率を上げてください。</span></div>` : ''}
+      ${repay > 0 ? `<div class="advice-item">🏦 <span><strong>返済額を損益に加えて考える：</strong>毎月の返済 ${fmt(repay)}万円 は「損益上の利益が ${fmt(repay)}万円 以上なければ手元が減り続ける」ことを意味します。返済を含めた必要月商を再設計してください。</span></div>` : ''}
+      ${taxShort > 0 ? `<div class="advice-item">🧾 <span><strong>消費税を毎月積み立てる：</strong>月 ${fmt(taxShort)}万円 を別口座に積み立てる習慣をつけてください。申告時の一括支払いによる資金ショートを防げます。</span></div>` : ''}
+      <div class="advice-item">💡 <span><strong>「利益が出た月」こそ注意：</strong>利益が出た月に仕入れを増やしがちです。しかしその仕入れ代金は翌月以降の現金を先食いしています。利益が出たら、まず現金残高を確認する習慣が重要です。</span></div>
+    </div>`;
+}
+
+// ─── ステージ切り替え ─────────────────────────
+function badgeHTML(v,th,inv){
+  if(v===null) return '<span class="badge b-na">—</span>';
+  const g = inv?(v<=th.ok):(v>=th.ok);
+  const w = inv?(v<=th.warn):(v>=th.warn);
+  return g?'<span class="badge b-ok">○</span>':w?'<span class="badge b-warn">△</span>':'<span class="badge b-ng">×</span>';
+}
+function badgeClass(v,th,inv){
+  if(v===null) return 'na';
+  const g=inv?(v<=th.ok):(v>=th.ok), w=inv?(v<=th.warn):(v>=th.warn);
+  return g?'ok':w?'warn':'ng';
+}
+
+function renderResult(elId, kpis, verdict, verdictSub, tierName, gradClass, be, beSurvival, beSub, survSub, priorities){
+  const el = document.getElementById(elId);
+  let kpiHtml = kpis.map(k=>{
+    const dec = k.dec!==undefined?k.dec:1;
+    const vs = k.val===null?'—':(fmt(k.val,dec)+' '+k.unit);
+    const b = k.th ? badgeHTML(k.val,k.th,k.inv) : '<span class="badge b-na"></span>';
+    return `<div class="kpi-row"><span class="kpi-name">${k.label}</span><span class="kpi-val">${vs}</span>${b}</div>`;
+  }).join('');
+  const pc=['pn1','pn2','pn3'];
+  let priHtml = priorities.length===0
+    ? '<div class="no-issues">✅ 現時点で改善優先事項はありません</div>'
+    : priorities.slice(0,3).map((p,i)=>`<div class="pri-item"><div class="pn ${pc[i]}">${i+1}</div><div class="pt">${p}</div></div>`).join('');
+
+  el.innerHTML = `
+    <div class="score-card">
+      <div class="sc-head ${gradClass}">
+        <div class="sc-eyebrow">OVERALL DIAGNOSIS</div>
+        <div class="sc-verdict">${verdict}</div>
+        <div class="sc-sub">${verdictSub}</div>
+        ${tierName ? `<div class="tier-badge">${tierName}</div>` : ''}
+      </div>
+      <div class="kpi-list">${kpiHtml}</div>
+    </div>
+    <div class="be-box">
+      <div class="be-inner">
+        <div class="be-label">損益分岐点月商</div>
+        <div class="be-val">${fmt(be)}<span class="be-unit">万円</span></div>
+        <div class="be-sub">${beSub}</div>
+      </div>
+      <div class="be-div"></div>
+      <div class="be-inner">
+        <div class="be-label">生存月商（給与確保後）</div>
+        <div class="be-val">${fmt(beSurvival)}<span class="be-unit">万円</span></div>
+        <div class="be-sub">${survSub}</div>
+      </div>
+    </div>
+    <div class="pri-box">
+      <div class="pri-title">改善優先順位</div>
+      ${priHtml}
+    </div>`;
+}
+
+function verdict(scores){
+  const ng=scores.filter(s=>s==='ng').length, wn=scores.filter(s=>s==='warn').length;
+  if(ng===0&&wn===0) return ['今の売上で黒字可能','主要指標がすべて基準値内です'];
+  if(ng===0) return ['要注意',`${wn}項目が警戒ラインに近づいています`];
+  if(ng>=2) return ['構造変更が必要',`${ng}項目で基準値を外れています`];
+  return ['改善が必要','1項目で基準値を外れています'];
+}
+function verdictPre(scores){
+  const ng=scores.filter(s=>s==='ng').length, wn=scores.filter(s=>s==='warn').length;
+  if(ng===0&&wn===0) return ['生存可能','3層すべてが基準値内に収まっています'];
+  if(ng===0) return ['要注意',`${wn}項目が警戒ラインに近づいています`];
+  if(ng>=2) return ['設計変更が必要',`${ng}項目で基準値を外れています`];
+  return ['条件付き可','1項目で基準値を外れています'];
+}
+
+// ─── 既存店舗 ────────────────────────────
+function calcEx(){
+  const rev=v('e_rev'), cogs=v('e_cogs'), rent=v('e_rent'), labor=v('e_labor'),
+        other=v('e_other'), salary=v('e_salary'), inv=v('e_inv'), stale=v('e_stale');
+  const TH = getTH(rev);
+  const tierName = getTierName(rev);
+  const gm = 100-cogs;
+  const fx = rent+labor+other+salary;
+  const fxr = rev>0 ? fx/rev*100 : 0;
+  const salr = rev>0 ? salary/rev*100 : 0;
+  const rntr = rev>0 ? rent/rev*100 : 0;
+  const turn = inv>0 ? (rev*cogs/100)/inv : null;
+  const op = rev*gm/100 - fx;
+  const be = gm>0 ? (rent+labor+other)/(gm/100) : 0;
+  const bes = gm>0 ? fx/(gm/100) : 0;
+
+  const kpis=[
+    {label:'粗利率',      val:gm,     unit:'%',   th:TH.gm,  inv:false},
+    {label:'固定費率',    val:fxr,    unit:'%',   th:TH.fc,  inv:true},
+    {label:'オーナー給与率',val:salr,  unit:'%',   th:TH.sal, inv:false},
+    {label:'家賃比率',    val:rntr,   unit:'%',   th:TH.rnt, inv:true},
+    {label:'在庫回転率',  val:turn,   unit:'回',  th:TH.inv, inv:false, dec:2},
+    {label:'滞留在庫率',  val:stale,  unit:'%',   th:TH.stl, inv:true},
+    {label:'営業利益',    val:op,     unit:'万円', th:null},
+  ];
+  const sc=[badgeClass(gm,TH.gm,false),badgeClass(fxr,TH.fc,true),badgeClass(salr,TH.sal,false)];
+  const [vd,vs]=verdict(sc);
+  const beSub=rev>0?`現在月商との差：${fmt(rev-be)} 万円（${rev>=be?'黒字':'赤字'}）`:'';
+  const survSub=`1日あたり必要売上：${fmt(bes/25)} 万円（月25日換算）`;
+  const pri=[];
+  if(salr<TH.sal.warn) pri.push(`<strong>オーナー給与の確保</strong>：給与率 ${fmt(salr)}%（基準${TH.sal.ok}%）。固定費削減または粗利率改善が必要です`);
+  if(fxr>TH.fc.warn)   pri.push(`<strong>固定費の削減</strong>：固定費率 ${fmt(fxr)}%（基準${TH.fc.ok}%以内）。家賃・人件費の見直しを検討してください`);
+  if(gm<TH.gm.warn)    pri.push(`<strong>粗利率の改善</strong>：粗利率 ${fmt(gm)}%（基準${TH.gm.ok}%）。値引き削減または仕入れ先見直しを`);
+  if(turn!==null&&turn<TH.inv.warn) pri.push(`<strong>在庫の圧縮</strong>：回転率 ${fmt(turn,2)}回（基準${TH.inv.ok}以上）。滞留在庫を処分して資金を回収してください`);
+  renderResult('res-ex',kpis,vd,vs,tierName,'ex-grad',be,bes,beSub,survSub,pri);
+}
+
+// ─── 開業前診断 ──────────────────────────
+function calcPre(){
+  const rent=v('p_rent'), intc=v('p_int'), intyrs=v('p_intyrs')||5,
+        dep=v('p_dep'), cap=v('p_cap'), loan=v('p_loan'), stk=v('p_stock'),
+        cogs=v('p_cogs'), labor=v('p_labor'), other=v('p_other'),
+        salary=v('p_salary'), rev=v('p_rev');
+  const TH = getTH(rev);
+  const tierName = getTierName(rev);
+  const intm = intc/(intyrs*12);
+  const gm = 100-cogs;
+  const fxEx = rent+intm+labor+other;
+  const fx = fxEx+salary;
+  const fxr = rev>0 ? fx/rev*100 : 0;
+  const rntr = rev>0 ? rent/rev*100 : 0;
+  const salr = rev>0 ? salary/rev*100 : 0;
+  const init_total = dep+intc+stk;
+  const working = cap+loan-init_total;
+  const be = gm>0 ? fxEx/(gm/100) : 0;
+  const bes = gm>0 ? fx/(gm/100) : 0;
+  const daily = bes/25;
+  const mProfit = rev*gm/100-fx;
+  const recov = mProfit>0 ? Math.ceil(init_total/mProfit) : null;
+
+  const kpis=[
+    {label:'粗利率（設計値）',      val:gm,      unit:'%',   th:TH.gm,  inv:false},
+    {label:'家賃比率',              val:rntr,    unit:'%',   th:TH.rnt, inv:true},
+    {label:'固定費率（設計値）',    val:fxr,     unit:'%',   th:TH.fc,  inv:true},
+    {label:'オーナー給与率（目標）',val:salr,    unit:'%',   th:TH.sal, inv:false},
+    {label:'開業後手元資金',        val:working, unit:'万円', th:null},
+    {label:'内装費（月割）',        val:intm,    unit:'万円', th:null, dec:1},
+    {label:'初期投資回収見込み',    val:recov,   unit:'ヶ月', th:null, dec:0},
+  ];
+  const sc=[badgeClass(rntr,TH.rnt,true),badgeClass(gm,TH.gm,false),badgeClass(salr,TH.sal,false)];
+  const [vd,vs]=verdictPre(sc);
+  const beSub=rev>0?`見込み月商との差：${fmt(rev-be)} 万円（${rev>=be?'黒字見込み':'赤字見込み'}）`:'';
+  const survSub=`1日あたり必要売上：${fmt(daily)} 万円` + (recov?` ／ 初期投資回収：${recov}ヶ月`:'');
+  const pri=[];
+  if(rntr>TH.rnt.warn)  pri.push(`<strong>家賃が高い設計です</strong>：家賃比率 ${fmt(rntr)}%（基準${TH.rnt.ok}%以内）。家賃交渉または物件の再検討を`);
+  if(gm<TH.gm.warn)     pri.push(`<strong>粗利率が低い設計です</strong>：粗利率 ${fmt(gm)}%（基準${TH.gm.ok}%）。仕入れ先見直しまたは価格帯の引き上げを`);
+  if(salr<TH.sal.warn)  pri.push(`<strong>給与確保の見通しが立っていません</strong>：給与率 ${fmt(salr)}%（基準${TH.sal.ok}%）`);
+  if(working<20)        pri.push(`<strong>開業後の手元資金不足</strong>：残高 ${fmt(working)} 万円。最低でも2〜3ヶ月分固定費を確保してください`);
+  renderResult('res-pre',kpis,vd,vs,tierName,'pre-grad',be,bes,beSub,survSub,pri);
+}
+
+// ─── CF シミュレーション ──────────────────
+function safeRun(fn) {
+  try { fn(); } catch(e) { console.error(fn.name, e); }
+}
+safeRun(calcEx);
+safeRun(calcPre);
+safeRun(calcGap);
+</script>
+<div style="background:var(--navy2);padding:28px 32px;margin-top:32px;text-align:center">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px">NEXT STEP</div>
+  <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:6px">数値の意味と改善策を知りたい方へ</div>
+  <div style="font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:16px">
+    このツールで出た数値をどう読み解くか。何から手をつけるか。<br>
+    アパレル小売22年・現役経営者が90分で診断します。
+  </div>
+  <a href="https://coconala.com" target="_blank" style="display:inline-block;background:#22c55e;color:#fff;font-size:13px;font-weight:700;padding:12px 32px;border-radius:10px;text-decoration:none;letter-spacing:.04em">コンサルを申し込む（9,800円）→</a>
+  <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:10px">初回キャンペーン中：4,980円</div>
+</div>
+</body>
+</html>
