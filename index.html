@@ -206,7 +206,6 @@ input:checked+.excf-slider{background:#6d28d9}
 <div class="tabs">
   <div class="tab active-existing" onclick="setTab('existing')">既存店舗　診断</div>
   <div class="tab" onclick="setTab('preopen')">開業前　診断</div>
-  <div class="tab" onclick="setTab('gap')">利益と現金のギャップ</div>
 </div>
 
 <!-- ━━━━━━ PAGE: 既存店舗 ━━━━━━ -->
@@ -279,54 +278,6 @@ input:checked+.excf-slider{background:#6d28d9}
 </div>
 </div>
 
-<!-- ━━━━━━ PAGE: 利益と現金のギャップ ━━━━━━ -->
-<div class="page" id="page-gap">
-<div class="full-col">
-
-  <!-- 解説パネル -->
-  <div class="gap-explain">
-    <div class="gap-explain-title">📘 なぜ「利益が出ているのに現金がないのか」</div>
-    <div class="gap-explain-body">
-      損益計算書の「利益」と、実際に手元に残る「現金」は<strong>別物</strong>です。<br>
-      アパレル経営では特に、この2つのギャップが大きくなりやすい構造があります。<br>
-      下に数値を入力すると、あなたのお店で毎月いくらのギャップが発生しているかを可視化します。
-    </div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
-
-    <!-- 入力 -->
-    <div>
-      <div class="card gap-card">
-        <div class="card-head"><div class="ch-icon">🔢</div>基本情報</div>
-        <div class="card-body">
-          <div class="cf-section-title" style="border-top:none;padding-top:0;margin-top:0">【売上・粗利】</div>
-          <div class="ir"><div class="il">月商</div><div class="iw"><input type="number" id="g_rev" value="80" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">原価率</div><div class="iw"><input type="number" id="g_cogs" value="50" min="0" max="100" oninput="calcGap()"><span class="unit">%</span></div></div>
-          <div class="cf-section-title">【固定費】</div>
-          <div class="ir"><div class="il">家賃</div><div class="iw"><input type="number" id="g_rent" value="12" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">人件費（オーナー以外）</div><div class="iw"><input type="number" id="g_labor" value="8" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">その他固定費</div><div class="iw"><input type="number" id="g_other" value="3" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">オーナー給与</div><div class="iw"><input type="number" id="g_salary" value="10" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="cf-section-title">【在庫】</div>
-          <div class="ir"><div class="il">現在の在庫総額（原価）</div><div class="iw"><input type="number" id="g_inv" value="80" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">月次仕入れ支払額<small>実際に毎月支払う額</small></div><div class="iw"><input type="number" id="g_purchase" value="50" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">在庫回転率<small>月商÷在庫総額（原価）の目安</small></div><div class="iw"><input type="number" id="g_turn" value="1.0" min="0.1" step="0.1" oninput="calcGap()"><span class="unit">回/月</span></div></div>
-          <div class="cf-section-title">【その他現金流出】</div>
-          <div class="ir"><div class="il">借入元金の月次返済額</div><div class="iw"><input type="number" id="g_repay" value="0" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">減価償却費（月額）<small>内装・什器等の月割</small></div><div class="iw"><input type="number" id="g_dep" value="2" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-          <div class="ir"><div class="il">消費税積立不足<small>売上×10%を積立できていない月額</small></div><div class="iw"><input type="number" id="g_tax" value="0" min="0" oninput="calcGap()"><span class="unit">万円</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 結果 -->
-    <div id="gap-result"></div>
-
-  </div>
-</div>
-</div>
-
 <script>
 // ─── 2段階基準値 ────────────────────────────
 // 低月商層（50〜80万）と中月商層（100万超）で基準を変える
@@ -359,15 +310,14 @@ const v = id => parseFloat(document.getElementById(id)?.value)||0;
 const fmt = (n,d=1) => isFinite(n)&&!isNaN(n) ? n.toFixed(d).replace(/\.0$/,'') : '—';
 
 function setTab(t){
-  ['existing','preopen','gap'].forEach(m=>{
+  ['existing','preopen'].forEach(m=>{
     document.getElementById('page-'+m).classList.toggle('show', m===t);
-    const idx=['existing','preopen','gap'].indexOf(m);
+    const idx=['existing','preopen'].indexOf(m);
     document.querySelectorAll('.tab')[idx]
       .className = 'tab' + (m===t ? ' active-'+m : '');
   });
   if(t==='existing') calcEx();
   if(t==='preopen')  calcPre();
-  if(t==='gap')      calcGap();
 }
 
 // ─── 利益と現金のギャップ ─────────────────────────
@@ -687,7 +637,6 @@ function safeRun(fn) {
 }
 safeRun(calcEx);
 safeRun(calcPre);
-safeRun(calcGap);
 </script>
 <div style="background:var(--navy2);padding:28px 32px;margin-top:32px;text-align:center">
   <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px">NEXT STEP</div>
